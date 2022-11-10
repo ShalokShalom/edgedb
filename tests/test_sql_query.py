@@ -331,3 +331,36 @@ class TestSQL(tb.SQLQueryTestCase):
             '''
         )
         self.assertEqual(res, [['Forrest Gump']])
+
+    async def test_sql_query_introspection_00(self):
+        res = await self.squery_values(
+            '''
+            SELECT table_catalog, table_schema, table_name
+            FROM information_schema.tables
+            ORDER BY table_name
+            '''
+        )
+        self.assertEqual(
+            res,
+            [
+                ['postgres', 'public', 'book'],
+                ['postgres', 'public', 'content'],
+                ['postgres', 'public', 'genre'],
+                ['postgres', 'public', 'movie'],
+                ['postgres', 'public', 'person'],
+            ],
+        )
+
+    async def test_sql_query_introspection_01(self):
+        res = await self.squery_values(
+            '''
+            SELECT table_catalog, table_schema, table_name, column_name, 
+                ordinal_position, data_type
+            FROM information_schema.columns
+            ORDER BY table_name, column_name
+            LIMIT 1
+            '''
+        )
+        self.assertEqual(
+            res, ['postgres', 'public', 'book', 'genre_id', 2, 'uuid']
+        )

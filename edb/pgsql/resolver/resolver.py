@@ -268,6 +268,23 @@ def resolve_Relation(
     relation: pgast.Relation, *, ctx: Context
 ) -> pgast.Relation:
     assert relation.name
+    catalog = relation.catalogname or 'postgres'
+    schema_name = relation.schemaname or 'public'
+
+    # try information schema
+
+    if catalog == 'postgres' and schema_name == 'information_schema':
+        cols = _get_information_schema(relation.name)
+        if cols:
+            ctx.scope.rel.name = relation.name
+            ctx.scope.rel.columns = [
+                context.Column(name=c, reference_as=c)
+                for c in cols
+            ]
+            return pgast.Relation(
+                name=relation.name,
+                schemaname='edgedbsql',
+            )
 
     # try a CTE
     cte = next((t for t in ctx.scope.ctes if t.name == relation.name), None)
@@ -278,7 +295,7 @@ def resolve_Relation(
 
     # lookup the object in schema
     obj: Optional[s_objtypes.ObjectType] = None
-    if (relation.schemaname or 'public') == 'public':
+    if schema_name == 'public':
         object_type_name = relation.name[0].upper() + relation.name[1:]
 
         obj = ctx.schema.get(  # type: ignore
@@ -347,6 +364,72 @@ def resolve_Relation(
 
     return pgast.Relation(name=dbname, schemaname=schemaname)
 
+def _get_information_schema(table: str) -> List[str]:
+    # TODO: this should probably go somewhere else
+    if table == 'tables':
+        return [
+            'table_catalog',
+            'table_schema',
+            'table_name',
+            'table_type',
+            'self_referencing_column_name',
+            'reference_generation',
+            'user_defined_type_catalog',
+            'user_defined_type_schema',
+            'user_defined_type_name',
+            'is_insertable_into',
+            'is_typed',
+            'commit_action'
+        ]
+    if table == 'columns':
+        return [
+            'table_catalog',
+            'table_schema',
+            'table_name',
+            'column_name',
+            'ordinal_position',
+            'column_default',
+            'is_nullable',
+            'data_type',
+            'character_maximum_length',
+            'character_octet_length',
+            'numeric_precision',
+            'numeric_precision_radix',
+            'numeric_scale',
+            'datetime_precision',
+            'interval_type',
+            'interval_precision',
+            'character_set_catalog',
+            'character_set_schema',
+            'character_set_name',
+            'collation_catalog',
+            'collation_schema',
+            'collation_name',
+            'domain_catalog',
+            'domain_schema',
+            'domain_name',
+            'udt_catalog',
+            'udt_schema',
+            'udt_name',
+            'scope_catalog',
+            'scope_schema',
+            'scope_name',
+            'maximum_cardinality',
+            'dtd_identifier',
+            'is_self_referencing',
+            'is_identity',
+            'identity_generation',
+            'identity_start',
+            'identity_increment',
+            'identity_maximum',
+            'identity_minimum',
+            'identity_cycle',
+            'is_generated',
+            'generation_expression',
+            'is_updatable',
+        ]
+    return []
+        
 
 # this function cannot go though dispatch,
 # because it may return multiple nodes, due to * notation

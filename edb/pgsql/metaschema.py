@@ -4131,121 +4131,128 @@ async def bootstrap(
     config_spec: edbconfig.Spec
 ) -> None:
     commands = dbops.CommandGroup()
-    commands.add_commands([
-        dbops.CreateSchema(name='edgedb'),
-        dbops.CreateSchema(name='edgedbss'),
-        dbops.CreateSchema(name='edgedbpub'),
-        dbops.CreateSchema(name='edgedbstd'),
-        dbops.CreateCompositeType(ExpressionType()),
-        dbops.CreateView(NormalizedPgSettingsView()),
-        dbops.CreateTable(DBConfigTable()),
-        dbops.CreateTable(DMLDummyTable()),
-        dbops.Query(DMLDummyTable.SETUP_QUERY),
-        dbops.CreateFunction(IntervalToMillisecondsFunction()),
-        dbops.CreateFunction(SafeIntervalCastFunction()),
-        dbops.CreateFunction(QuoteIdentFunction()),
-        dbops.CreateFunction(QuoteNameFunction()),
-        dbops.CreateFunction(AlterCurrentDatabaseSetString()),
-        dbops.CreateFunction(AlterCurrentDatabaseSetStringArray()),
-        dbops.CreateFunction(AlterCurrentDatabaseSetNonArray()),
-        dbops.CreateFunction(AlterCurrentDatabaseSetArray()),
-        dbops.CreateFunction(GetBackendCapabilitiesFunction()),
-        dbops.CreateFunction(GetBackendTenantIDFunction()),
-        dbops.CreateFunction(GetDatabaseBackendNameFunction()),
-        dbops.CreateFunction(GetRoleBackendNameFunction()),
-        dbops.CreateFunction(GetUserSequenceBackendNameFunction()),
-        dbops.CreateFunction(GetStdModulesFunction()),
-        dbops.CreateFunction(GetObjectMetadata()),
-        dbops.CreateFunction(GetColumnMetadata()),
-        dbops.CreateFunction(GetSharedObjectMetadata()),
-        dbops.CreateFunction(GetDatabaseMetadataFunction()),
-        dbops.CreateFunction(GetCurrentDatabaseFunction()),
-        dbops.CreateFunction(RaiseExceptionFunction()),
-        dbops.CreateFunction(RaiseExceptionOnNullFunction()),
-        dbops.CreateFunction(RaiseExceptionOnNotNullFunction()),
-        dbops.CreateFunction(RaiseExceptionOnEmptyStringFunction()),
-        dbops.CreateFunction(AssertJSONTypeFunction()),
-        dbops.CreateFunction(ExtractJSONScalarFunction()),
-        dbops.CreateFunction(NormalizeNameFunction()),
-        dbops.CreateFunction(GetNameModuleFunction()),
-        dbops.CreateFunction(NullIfArrayNullsFunction()),
-        dbops.CreateCompositeType(IndexDescType()),
-        dbops.CreateFunction(IntrospectIndexesFunction()),
-        dbops.CreateCompositeType(TriggerDescType()),
-        dbops.CreateFunction(IntrospectTriggersFunction()),
-        dbops.CreateCompositeType(TableInheritanceDescType()),
-        dbops.CreateDomain(BigintDomain()),
-        dbops.CreateDomain(ConfigMemoryDomain()),
-        dbops.CreateDomain(TimestampTzDomain()),
-        dbops.CreateDomain(TimestampDomain()),
-        dbops.CreateDomain(DateDomain()),
-        dbops.CreateDomain(DurationDomain()),
-        dbops.CreateDomain(RelativeDurationDomain()),
-        dbops.CreateDomain(DateDurationDomain()),
-        dbops.CreateFunction(StrToConfigMemoryFunction()),
-        dbops.CreateFunction(ConfigMemoryToStrFunction()),
-        dbops.CreateFunction(StrToBigint()),
-        dbops.CreateFunction(StrToDecimal()),
-        dbops.CreateFunction(StrToInt64NoInline()),
-        dbops.CreateFunction(StrToInt32NoInline()),
-        dbops.CreateFunction(StrToInt16NoInline()),
-        dbops.CreateFunction(StrToFloat64NoInline()),
-        dbops.CreateFunction(StrToFloat32NoInline()),
-        dbops.CreateFunction(GetTableDescendantsFunction()),
-        dbops.CreateFunction(ParseTriggerConditionFunction()),
-        dbops.CreateFunction(NormalizeArrayIndexFunction()),
-        dbops.CreateFunction(NormalizeArraySliceIndexFunction()),
-        dbops.CreateFunction(IntOrNullFunction()),
-        dbops.CreateFunction(ArrayIndexWithBoundsFunction()),
-        dbops.CreateFunction(ArraySliceFunction()),
-        dbops.CreateFunction(StringIndexWithBoundsFunction()),
-        dbops.CreateFunction(LengthStringProxyFunction()),
-        dbops.CreateFunction(LengthBytesProxyFunction()),
-        dbops.CreateFunction(SubstrProxyFunction()),
-        dbops.CreateFunction(StringSliceImplFunction()),
-        dbops.CreateFunction(StringSliceFunction()),
-        dbops.CreateFunction(BytesSliceFunction()),
-        dbops.CreateFunction(JSONIndexByTextFunction()),
-        dbops.CreateFunction(JSONIndexByIntFunction()),
-        dbops.CreateFunction(JSONSliceFunction()),
-        dbops.CreateFunction(DatetimeInFunction()),
-        dbops.CreateFunction(DurationInFunction()),
-        dbops.CreateFunction(DateDurationInFunction()),
-        dbops.CreateFunction(LocalDatetimeInFunction()),
-        dbops.CreateFunction(LocalDateInFunction()),
-        dbops.CreateFunction(LocalTimeInFunction()),
-        dbops.CreateFunction(ToTimestampTZCheck()),
-        dbops.CreateFunction(ToDatetimeFunction()),
-        dbops.CreateFunction(ToLocalDatetimeFunction()),
-        dbops.CreateFunction(StrToBool()),
-        dbops.CreateFunction(BytesIndexWithBoundsFunction()),
-        dbops.CreateEnum(SysConfigSourceType()),
-        dbops.CreateEnum(SysConfigScopeType()),
-        dbops.CreateCompositeType(SysConfigValueType()),
-        dbops.CreateFunction(ConvertPostgresConfigUnitsFunction()),
-        dbops.CreateFunction(InterpretConfigValueToJsonFunction()),
-        dbops.CreateFunction(PostgresConfigValueToJsonFunction()),
-        dbops.CreateFunction(SysConfigFullFunction()),
-        dbops.CreateFunction(SysConfigFunction()),
-        dbops.CreateFunction(ResetSessionConfigFunction()),
-        dbops.CreateFunction(ApplySessionConfigFunction(config_spec)),
-        dbops.CreateFunction(SysGetTransactionIsolation()),
-        dbops.CreateFunction(GetCachedReflection()),
-        dbops.CreateFunction(GetBaseScalarTypeMap()),
-        dbops.CreateFunction(GetTypeToRangeNameMap()),
-        dbops.CreateFunction(GetPgTypeForEdgeDBTypeFunction()),
-        dbops.CreateFunction(DescribeInstanceConfigAsDDLFunctionForwardDecl()),
-        dbops.CreateFunction(DescribeDatabaseConfigAsDDLFunctionForwardDecl()),
-        dbops.CreateFunction(DescribeRolesAsDDLFunctionForwardDecl()),
-        dbops.CreateRange(Float32Range()),
-        dbops.CreateRange(Float64Range()),
-        dbops.CreateRange(DatetimeRange()),
-        dbops.CreateRange(LocalDatetimeRange()),
-        dbops.CreateFunction(RangeToJsonFunction()),
-        dbops.CreateFunction(RangeValidateFunction()),
-        dbops.CreateFunction(RangeUnpackLowerValidateFunction()),
-        dbops.CreateFunction(RangeUnpackUpperValidateFunction()),
-    ])
+    commands.add_commands(
+        [
+            dbops.CreateSchema(name='edgedb'),
+            dbops.CreateSchema(name='edgedbss'),
+            dbops.CreateSchema(name='edgedbpub'),
+            dbops.CreateSchema(name='edgedbstd'),
+            dbops.CreateSchema(name='edgedbsql'),
+            dbops.CreateCompositeType(ExpressionType()),
+            dbops.CreateView(NormalizedPgSettingsView()),
+            dbops.CreateTable(DBConfigTable()),
+            dbops.CreateTable(DMLDummyTable()),
+            dbops.Query(DMLDummyTable.SETUP_QUERY),
+            dbops.CreateFunction(IntervalToMillisecondsFunction()),
+            dbops.CreateFunction(SafeIntervalCastFunction()),
+            dbops.CreateFunction(QuoteIdentFunction()),
+            dbops.CreateFunction(QuoteNameFunction()),
+            dbops.CreateFunction(AlterCurrentDatabaseSetString()),
+            dbops.CreateFunction(AlterCurrentDatabaseSetStringArray()),
+            dbops.CreateFunction(AlterCurrentDatabaseSetNonArray()),
+            dbops.CreateFunction(AlterCurrentDatabaseSetArray()),
+            dbops.CreateFunction(GetBackendCapabilitiesFunction()),
+            dbops.CreateFunction(GetBackendTenantIDFunction()),
+            dbops.CreateFunction(GetDatabaseBackendNameFunction()),
+            dbops.CreateFunction(GetRoleBackendNameFunction()),
+            dbops.CreateFunction(GetUserSequenceBackendNameFunction()),
+            dbops.CreateFunction(GetStdModulesFunction()),
+            dbops.CreateFunction(GetObjectMetadata()),
+            dbops.CreateFunction(GetColumnMetadata()),
+            dbops.CreateFunction(GetSharedObjectMetadata()),
+            dbops.CreateFunction(GetDatabaseMetadataFunction()),
+            dbops.CreateFunction(GetCurrentDatabaseFunction()),
+            dbops.CreateFunction(RaiseExceptionFunction()),
+            dbops.CreateFunction(RaiseExceptionOnNullFunction()),
+            dbops.CreateFunction(RaiseExceptionOnNotNullFunction()),
+            dbops.CreateFunction(RaiseExceptionOnEmptyStringFunction()),
+            dbops.CreateFunction(AssertJSONTypeFunction()),
+            dbops.CreateFunction(ExtractJSONScalarFunction()),
+            dbops.CreateFunction(NormalizeNameFunction()),
+            dbops.CreateFunction(GetNameModuleFunction()),
+            dbops.CreateFunction(NullIfArrayNullsFunction()),
+            dbops.CreateCompositeType(IndexDescType()),
+            dbops.CreateFunction(IntrospectIndexesFunction()),
+            dbops.CreateCompositeType(TriggerDescType()),
+            dbops.CreateFunction(IntrospectTriggersFunction()),
+            dbops.CreateCompositeType(TableInheritanceDescType()),
+            dbops.CreateDomain(BigintDomain()),
+            dbops.CreateDomain(ConfigMemoryDomain()),
+            dbops.CreateDomain(TimestampTzDomain()),
+            dbops.CreateDomain(TimestampDomain()),
+            dbops.CreateDomain(DateDomain()),
+            dbops.CreateDomain(DurationDomain()),
+            dbops.CreateDomain(RelativeDurationDomain()),
+            dbops.CreateDomain(DateDurationDomain()),
+            dbops.CreateFunction(StrToConfigMemoryFunction()),
+            dbops.CreateFunction(ConfigMemoryToStrFunction()),
+            dbops.CreateFunction(StrToBigint()),
+            dbops.CreateFunction(StrToDecimal()),
+            dbops.CreateFunction(StrToInt64NoInline()),
+            dbops.CreateFunction(StrToInt32NoInline()),
+            dbops.CreateFunction(StrToInt16NoInline()),
+            dbops.CreateFunction(StrToFloat64NoInline()),
+            dbops.CreateFunction(StrToFloat32NoInline()),
+            dbops.CreateFunction(GetTableDescendantsFunction()),
+            dbops.CreateFunction(ParseTriggerConditionFunction()),
+            dbops.CreateFunction(NormalizeArrayIndexFunction()),
+            dbops.CreateFunction(NormalizeArraySliceIndexFunction()),
+            dbops.CreateFunction(IntOrNullFunction()),
+            dbops.CreateFunction(ArrayIndexWithBoundsFunction()),
+            dbops.CreateFunction(ArraySliceFunction()),
+            dbops.CreateFunction(StringIndexWithBoundsFunction()),
+            dbops.CreateFunction(LengthStringProxyFunction()),
+            dbops.CreateFunction(LengthBytesProxyFunction()),
+            dbops.CreateFunction(SubstrProxyFunction()),
+            dbops.CreateFunction(StringSliceImplFunction()),
+            dbops.CreateFunction(StringSliceFunction()),
+            dbops.CreateFunction(BytesSliceFunction()),
+            dbops.CreateFunction(JSONIndexByTextFunction()),
+            dbops.CreateFunction(JSONIndexByIntFunction()),
+            dbops.CreateFunction(JSONSliceFunction()),
+            dbops.CreateFunction(DatetimeInFunction()),
+            dbops.CreateFunction(DurationInFunction()),
+            dbops.CreateFunction(DateDurationInFunction()),
+            dbops.CreateFunction(LocalDatetimeInFunction()),
+            dbops.CreateFunction(LocalDateInFunction()),
+            dbops.CreateFunction(LocalTimeInFunction()),
+            dbops.CreateFunction(ToTimestampTZCheck()),
+            dbops.CreateFunction(ToDatetimeFunction()),
+            dbops.CreateFunction(ToLocalDatetimeFunction()),
+            dbops.CreateFunction(StrToBool()),
+            dbops.CreateFunction(BytesIndexWithBoundsFunction()),
+            dbops.CreateEnum(SysConfigSourceType()),
+            dbops.CreateEnum(SysConfigScopeType()),
+            dbops.CreateCompositeType(SysConfigValueType()),
+            dbops.CreateFunction(ConvertPostgresConfigUnitsFunction()),
+            dbops.CreateFunction(InterpretConfigValueToJsonFunction()),
+            dbops.CreateFunction(PostgresConfigValueToJsonFunction()),
+            dbops.CreateFunction(SysConfigFullFunction()),
+            dbops.CreateFunction(SysConfigFunction()),
+            dbops.CreateFunction(ResetSessionConfigFunction()),
+            dbops.CreateFunction(ApplySessionConfigFunction(config_spec)),
+            dbops.CreateFunction(SysGetTransactionIsolation()),
+            dbops.CreateFunction(GetCachedReflection()),
+            dbops.CreateFunction(GetBaseScalarTypeMap()),
+            dbops.CreateFunction(GetTypeToRangeNameMap()),
+            dbops.CreateFunction(GetPgTypeForEdgeDBTypeFunction()),
+            dbops.CreateFunction(
+                DescribeInstanceConfigAsDDLFunctionForwardDecl()
+            ),
+            dbops.CreateFunction(
+                DescribeDatabaseConfigAsDDLFunctionForwardDecl()
+            ),
+            dbops.CreateFunction(DescribeRolesAsDDLFunctionForwardDecl()),
+            dbops.CreateRange(Float32Range()),
+            dbops.CreateRange(Float64Range()),
+            dbops.CreateRange(DatetimeRange()),
+            dbops.CreateRange(LocalDatetimeRange()),
+            dbops.CreateFunction(RangeToJsonFunction()),
+            dbops.CreateFunction(RangeValidateFunction()),
+            dbops.CreateFunction(RangeUnpackLowerValidateFunction()),
+            dbops.CreateFunction(RangeUnpackUpperValidateFunction()),
+        ]
+    )
 
     block = dbops.PLTopBlock()
     commands.generate(block)
@@ -5005,6 +5012,168 @@ def _generate_schema_alias_view(
     )
 
 
+def _generate_sql_information_schema(
+    schema: s_schema.Schema,
+) -> List[dbops.View]:
+    ObjTy = schema.get('schema::ObjectType', type=s_objtypes.ObjectType)
+    obj_ty_name = common.get_backend_name(
+        schema, ObjTy, aspect='table', catenate=False,
+    )
+
+    Prop = schema.get('schema::Property', type=s_objtypes.ObjectType)
+    prop_name = common.get_backend_name(
+        schema, Prop, aspect='table', catenate=False,
+    )
+
+    Link = schema.get('schema::Link', type=s_objtypes.ObjectType)
+    link_name = common.get_backend_name(
+        schema, Link, aspect='table', catenate=False,
+    )
+
+    Ty = schema.get('schema::Type', type=s_objtypes.ObjectType)
+    ty_name = common.get_backend_name(
+        schema, Ty, aspect='table', catenate=False,
+    )
+
+    return [
+        dbops.View(
+            name=('edgedbsql', 'tables'),
+            query=(
+                f'''
+        SELECT
+            'postgres'::information_schema.sql_identifier AS table_catalog,
+            'public'::information_schema.sql_identifier AS table_schema,
+            LOWER(
+                substring({qi(ptr_col_name(schema, ObjTy, 'name'))} from 10)
+            )::information_schema.sql_identifier AS table_name,
+            'BASE TABLE'::information_schema.character_data AS table_type,
+            NULL::information_schema.sql_identifier
+                AS self_referencing_column_name,
+            NULL::information_schema.character_data AS reference_generation,
+            NULL::information_schema.sql_identifier
+                AS user_defined_type_catalog,
+            NULL::information_schema.sql_identifier
+                AS user_defined_type_schema,
+            NULL::information_schema.sql_identifier AS user_defined_type_name,
+            'NO'::information_schema.yes_or_no AS is_insertable_into,
+            'NO'::information_schema.yes_or_no AS is_typed,
+            NULL::information_schema.character_data AS commit_action
+        FROM {qt(obj_ty_name)}
+        WHERE {qi(ptr_col_name(schema, ObjTy, 'name'))} ilike 'default::%'
+            '''
+            ),
+        ),
+        dbops.View(
+            name=('edgedbsql', 'columns'),
+            query=(
+                f'''
+        SELECT
+            'postgres'::information_schema.sql_identifier AS table_catalog,
+            'public'::information_schema.sql_identifier AS table_schema,
+            LOWER(
+                substring({qi(ptr_col_name(schema, ObjTy, 'name'))} from 10)
+            )::information_schema.sql_identifier AS table_name,
+            pointers.name::information_schema.sql_identifier AS column_name,
+            ROW_NUMBER() OVER (
+            PARTITION BY {qi(ptr_col_name(schema, ObjTy, 'name'))}
+            ORDER BY
+                CASE WHEN pointers.name = 'id' THEN 0 ELSE 1 END,
+                pointers.name
+            )::information_schema.cardinal_number AS ordinal_position,
+            NULL::information_schema.character_data AS column_default,
+            CASE WHEN required THEN 'YES' ELSE 'NO' END
+                ::information_schema.yes_or_no AS is_nullable,
+            CASE pointers.type_name
+            WHEN 'std::anyreal' THEN 'double precision'
+            WHEN 'std::anyint' THEN 'bigint'
+            WHEN 'std::anyfloat' THEN 'double precision'
+            WHEN 'std::anynumeric' THEN 'character varying'
+            WHEN 'std::anyenum' THEN 'USER-DEFINED'
+            WHEN 'std::bool' THEN 'boolean'
+            WHEN 'std::bytes' THEN 'bytea'
+            WHEN 'std::uuid' THEN 'uuid'
+            WHEN 'std::str' THEN 'character varying'
+            WHEN 'std::json' THEN 'jsonb'
+            WHEN 'std::duration' THEN 'interval'
+            WHEN 'std::int16' THEN 'smallint'
+            WHEN 'std::int32' THEN 'integer'
+            WHEN 'std::int64' THEN 'bigint'
+            WHEN 'std::float32' THEN 'real'
+            WHEN 'std::float64' THEN 'double precision'
+            WHEN 'std::decimal' THEN 'numeric'
+            WHEN 'std::JsonEmpty' THEN 'jsonb'
+            WHEN 'std::bigint' THEN 'USER-DEFINED'
+            WHEN 'cal::local_datetime' THEN 'USER-DEFINED'
+            WHEN 'cal::local_date' THEN 'USER-DEFINED'
+            WHEN 'cal::local_time' THEN 'USER-DEFINED'
+            WHEN 'cal::relative_duration' THEN 'USER-DEFINED'
+            WHEN 'cal::date_duration' THEN 'USER-DEFINED'
+            ELSE 'USER-DEFINED' END
+                ::information_schema.character_data AS data_type,
+            NULL::information_schema.cardinal_number
+                AS character_maximum_length,
+            NULL::information_schema.cardinal_number AS character_octet_length,
+            NULL::information_schema.cardinal_number AS numeric_precision,
+            NULL::information_schema.cardinal_number
+                AS numeric_precision_radix,
+            NULL::information_schema.cardinal_number AS numeric_scale,
+            NULL::information_schema.cardinal_number AS datetime_precision,
+            NULL::information_schema.character_data AS interval_type,
+            NULL::information_schema.cardinal_number AS interval_precision,
+            NULL::information_schema.sql_identifier AS character_set_catalog,
+            NULL::information_schema.sql_identifier AS character_set_schema,
+            NULL::information_schema.sql_identifier AS character_set_name,
+            NULL::information_schema.sql_identifier AS collation_catalog,
+            NULL::information_schema.sql_identifier AS collation_schema,
+            NULL::information_schema.sql_identifier AS collation_name,
+            NULL::information_schema.sql_identifier AS domain_catalog,
+            NULL::information_schema.sql_identifier AS domain_schema,
+            NULL::information_schema.sql_identifier AS domain_name,
+            'postgres'::information_schema.sql_identifier AS udt_catalog,
+            'pg_catalog'::information_schema.sql_identifier AS udt_schema,
+            NULL::information_schema.sql_identifier AS udt_name,
+            NULL::information_schema.sql_identifier AS scope_catalog,
+            NULL::information_schema.sql_identifier AS scope_schema,
+            NULL::information_schema.sql_identifier AS scope_name,
+            NULL::information_schema.cardinal_number AS maximum_cardinality,
+            0::information_schema.sql_identifier AS dtd_identifier,
+            'NO'::information_schema.yes_or_no AS is_self_referencing,
+            'NO'::information_schema.yes_or_no AS is_identity,
+            NULL::information_schema.character_data AS identity_generation,
+            NULL::information_schema.character_data AS identity_start,
+            NULL::information_schema.character_data AS identity_increment,
+            NULL::information_schema.character_data AS identity_maximum,
+            NULL::information_schema.character_data AS identity_minimum,
+            'NO' ::information_schema.yes_or_no AS identity_cycle,
+            'NEVER'::information_schema.character_data AS is_generated,
+            NULL::information_schema.character_data AS generation_expression,
+            'YES'::information_schema.yes_or_no AS is_updatable
+        FROM {qt(obj_ty_name)}
+        JOIN ((
+            SELECT 
+                {qi(ptr_col_name(schema, Prop, 'source'))},
+                {qi(ptr_col_name(schema, Prop, 'name'))}, 
+                {qi(ptr_col_name(schema, Prop, 'required'))},
+                {qi(ptr_col_name(schema, Ty, 'name'))}
+            FROM {qt(prop_name)}
+            LEFT JOIN {qt(ty_name)} t ON t.{qi(ptr_col_name(schema, Ty, 'id'))}
+                = {qi(ptr_col_name(schema, Prop, 'target'))}
+        ) UNION (
+            SELECT 
+                {qi(ptr_col_name(schema, Link, 'source'))},
+                {qi(ptr_col_name(schema, Link, 'name'))} || '_id', 
+                {qi(ptr_col_name(schema, Link, 'required'))},
+                'std::uuid'
+            FROM {qt(link_name)}
+            WHERE {qi(ptr_col_name(schema, Link, 'name'))} != '__type__'
+        )) pointers(source, name, required, type_name)
+            ON {qi(ptr_col_name(schema, ObjTy, 'id'))} = pointers.source
+        WHERE {qi(ptr_col_name(schema, ObjTy, 'name'))} LIKE 'default::%'
+            '''
+            ),
+        )
+    ]
+
 def get_support_views(
     schema: s_schema.Schema,
     backend_params: params.BackendRuntimeParams,
@@ -5086,6 +5255,9 @@ def get_support_views(
         schema, s_name.UnqualName('sys'))
     for alias_view in sys_alias_views:
         commands.add_command(dbops.CreateView(alias_view, or_replace=True))
+
+    for view in _generate_sql_information_schema(schema):
+        commands.add_command(dbops.CreateView(view, or_replace=True))
 
     return commands
 
